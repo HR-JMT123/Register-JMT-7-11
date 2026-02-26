@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบยืนยันสิทธิ์สวัสดิการพนักงาน JMT x 7-Eleven</title>
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+    :root {
+      --primary-red: #ED1C24;
+      --dark-red: #C11219;
+      --light-red: #fef0f0;
+      --text-main: #333333;
+    }
+    body {
+      font-family: 'Prompt', sans-serif;
+      background: linear-gradient(135deg, #ffffff 0%, #ffdde1 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+    }
+    .app-card {
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(237, 28, 36, 0.15);
+      width: 100%;
+      max-width: 500px;
+      overflow: hidden;
+      border-top: 6px solid var(--primary-red);
+      position: relative;
+    }
+    .app-header {
+      padding: 30px 20px 20px;
+      text-align: center;
+      border-bottom: 2px dashed #f0f0f0;
+      background-color: #fff;
+    }
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 15px;
+    }
+    .logo-img { 
+      max-height: 55px; 
+      object-fit: contain; 
+      border-radius: 8px;
+    }
+    .cross-icon {
+      font-size: 1.2rem;
+      color: #999;
+    }
+    
+    .step-section {
+      display: none;
+      animation: slideUp 0.5s ease;
+    }
+    .step-active { display: block; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    .form-control {
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 1.1rem;
+      border: 2px solid #e0e0e0;
+      text-align: center;
+    }
+    .form-control:focus {
+      border-color: var(--primary-red);
+      box-shadow: 0 0 0 0.25rem rgba(237, 28, 36, 0.2);
+    }
+    .form-control[readonly] {
+      background-color: #f8f9fa;
+      color: #555;
+      font-weight: 500;
+    }
+    
+    .btn-main {
+      background: linear-gradient(to right, var(--primary-red), var(--dark-red));
+      color: white;
+      border-radius: 50px;
+      padding: 12px 20px;
+      font-weight: 600;
+      border: none;
+      transition: all 0.3s;
+    }
+    .btn-main:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(237, 28, 36, 0.4);
+      color: white;
+    }
+
+    .consent-box {
+      background-color: #fef0f2;
+      border: 1px solid #fad2d8;
+      border-radius: 12px;
+      padding: 16px 20px;
+      transition: all 0.3s;
+    }
+    .custom-checkbox {
+      width: 1.5em;
+      height: 1.5em;
+      cursor: pointer;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .custom-checkbox:checked {
+      background-color: var(--primary-red);
+      border-color: var(--primary-red);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-card">
+    <div class="app-header">
+      <div class="logo-container">
+        <img src="https://scontent.fbkk7-3.fna.fbcdn.net/v/t39.30808-6/414715523_1264147624538970_7584152607658148947_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=53a332&_nc_ohc=OoLbi635ns0Q7kNvwEoAuyT&_nc_oc=AdkOBzyXhAPXMYTCjL32ZBB0COOT1L1GFMFhkRhTYiSlpCVpjYiTcWONukG6KY2U-X4&_nc_zt=23&_nc_ht=scontent.fbkk7-3.fna&_nc_gid=JqLwRBuywL0r8vSWgvOfyw&oh=00_AfvaZkrWfGDbfrnUKWUcOnkNXPuTNOfY06G1Pb48OKmsUA&oe=699E1160" alt="JMT" class="logo-img">
+        <i class="fa-solid fa-xmark cross-icon"></i>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/7-eleven_logo.svg/1024px-7-eleven_logo.svg.png" alt="7-Eleven" class="logo-img">
+      </div>
+      <h4 class="fw-bold mt-2" style="color: var(--primary-red);">ยืนยันสิทธิ์สวัสดิการพนักงาน</h4>
+      <p class="text-muted small mb-0">ระบบลงทะเบียนเพื่อรับสิทธิพิเศษจาก 7-Eleven</p>
+    </div>
+
+    <div class="p-4">
+      
+      <div id="step1" class="step-section step-active">
+        <label class="form-label fw-bold text-center w-100 mb-3"><i class="fa-solid fa-id-card text-danger"></i> ระบุรหัสพนักงานของท่าน</label>
+        <input type="text" id="empIdInput" class="form-control mb-4" placeholder="กรอกรหัสพนักงาน" style="text-transform: uppercase;">
+        
+        <button id="btnSearch" class="btn btn-main w-100 btn-lg" onclick="searchData()">
+          <span id="txtSearch"><i class="fa-solid fa-magnifying-glass"></i> ตรวจสอบข้อมูลพนักงาน</span>
+          <span id="loadSearch" class="spinner-border spinner-border-sm d-none" role="status"></span>
+        </button>
+      </div>
+
+      <div id="step2" class="step-section">
+        
+        <div class="mb-3 text-start">
+          <label class="form-label fw-bold text-muted small"><i class="fa-solid fa-user"></i> ข้อมูลพนักงาน</label>
+          <input type="text" id="displayName" class="form-control" readonly>
+        </div>
+
+        <div class="mb-4 text-start">
+          <label class="form-label fw-bold"><i class="fa-solid fa-phone text-danger"></i> เบอร์โทร</label>
+          <input type="tel" id="phoneNumber" class="form-control" placeholder="08XXXXXXXX" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+          <div class="text-danger mt-3 text-center" style="font-size: 1rem; font-weight: 500;">
+            * กรุณาระบุเบอร์ที่ผูกกับ All Member เพื่อรับสิทธิ
+          </div>
+        </div>
+
+        <div class="consent-box mb-4">
+          <div class="form-check d-flex align-items-start m-0">
+            <input class="form-check-input flex-shrink-0 mt-1 me-3 shadow-sm custom-checkbox" type="checkbox" id="consentCheck">
+            <label class="form-check-label text-start" for="consentCheck" style="font-size: 0.95rem; line-height: 1.6; cursor: pointer; color: #111;">
+              "ข้าพเจ้าขอรับรองว่าข้อมูลข้างต้นเป็นของข้าพเจ้า และขอยืนยันการเป็นสมาชิกของบริษัทฯ พร้อมทั้งยินยอมให้บริษัทฯ ส่งต่อข้อมูลนี้ไปยังบริษัท CP ALL เพื่อรับสิทธิประโยชน์ตามที่กำหนด"
+            </label>
+          </div>
+        </div>
+
+        <button id="btnSave" class="btn btn-main w-100 btn-lg" onclick="submitData()">
+          <span id="txtSave"><i class="fa-solid fa-floppy-disk"></i> บันทึกข้อมูล</span>
+          <span id="loadSave" class="spinner-border spinner-border-sm d-none" role="status"></span>
+        </button>
+        
+        <button class="btn btn-link text-muted w-100 mt-3" onclick="resetForm()" style="text-decoration: none;">
+          <i class="fa-solid fa-rotate-left"></i> ย้อนกลับ / เริ่มใหม่
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // =========================================================================
+    // URL ของ Web App จาก Google Apps Script ที่ใส่เรียบร้อยแล้ว
+    // =========================================================================
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyvVnLC2stLvkMJhw5klUxBATNzJdISQjJ3NBNXtXTYgQMvffahhKYOcsFSq0zXAuon-w/exec"; 
+
+    let currentEmpId = "";
+    let currentName = "";
+
+    function searchData() {
+      const empId = document.getElementById('empIdInput').value;
+      if(empId.trim() === "") {
+        Swal.fire({ icon: 'warning', title: 'แจ้งเตือน', text: 'กรุณากรอกรหัสพนักงาน', confirmButtonColor: '#ED1C24' });
+        return;
+      }
+
+      setLoading('txtSearch', 'loadSearch', 'btnSearch', true);
+
+      // เรียก API ไปยัง Google Apps Script (รองรับการ Redirect)
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        redirect: 'follow',
+        body: JSON.stringify({ action: "search", empId: empId })
+      })
+      .then(response => response.json())
+      .then(res => {
+        setLoading('txtSearch', 'loadSearch', 'btnSearch', false);
+        if(res.success) {
+          currentEmpId = res.empId;
+          currentName = res.name;
+          
+          document.getElementById('displayName').value = `${currentEmpId} : ${currentName}`;
+          document.getElementById('step1').classList.remove('step-active');
+          document.getElementById('step2').classList.add('step-active');
+        } else {
+          if(res.isDuplicate) {
+            Swal.fire({ icon: 'info', title: 'แจ้งเตือนสถานะ', text: res.message, confirmButtonColor: '#007A53' });
+          } else {
+            Swal.fire({ icon: 'error', title: 'ไม่พบข้อมูล', text: res.message, confirmButtonColor: '#ED1C24' });
+          }
+        }
+      })
+      .catch(error => {
+        console.error('Fetch Error:', error);
+        setLoading('txtSearch', 'loadSearch', 'btnSearch', false);
+        Swal.fire({ icon: 'error', title: 'เชื่อมต่อล้มเหลว', text: 'ไม่สามารถติดต่อเซิร์ฟเวอร์ได้ กรุณาลองใหม่', confirmButtonColor: '#ED1C24' });
+      });
+    }
+
+    function submitData() {
+      const phone = document.getElementById('phoneNumber').value;
+      const isAccepted = document.getElementById('consentCheck').checked;
+      
+      if(phone.length !== 10) {
+        Swal.fire({ icon: 'warning', title: 'ข้อมูลไม่ครบถ้วน', text: 'กรุณากรอกเบอร์โทรให้ครบ 10 หลัก', confirmButtonColor: '#ED1C24' });
+        return;
+      }
+      
+      if(!isAccepted) {
+        Swal.fire({ icon: 'warning', title: 'แจ้งเตือน', text: 'กรุณาติ๊กถูกเพื่อยอมรับเงื่อนไขก่อนบันทึกข้อมูล', confirmButtonColor: '#ED1C24' });
+        return;
+      }
+
+      setLoading('txtSave', 'loadSave', 'btnSave', true);
+
+      // เรียก API ไปยัง Google Apps Script (รองรับการ Redirect)
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        redirect: 'follow',
+        body: JSON.stringify({ action: "save", empId: currentEmpId, name: currentName, phone: phone })
+      })
+      .then(response => response.json())
+      .then(res => {
+        setLoading('txtSave', 'loadSave', 'btnSave', false);
+        if(res.success) {
+          Swal.fire({
+            icon: 'success',
+            title: 'บันทึกข้อมูลสำเร็จ!',
+            text: 'ระบบได้บันทึกการให้ความยินยอมของคุณเรียบร้อยแล้ว',
+            confirmButtonColor: '#007A53',
+            timer: 3000,
+            showConfirmButton: true
+          }).then(() => {
+            resetForm();
+          });
+        } else {
+           if(res.isDuplicate) {
+             Swal.fire({ icon: 'info', title: 'แจ้งเตือนสถานะ', text: res.message, confirmButtonColor: '#007A53' });
+           } else {
+             Swal.fire({ icon: 'error', title: 'ผิดพลาด', text: res.message, confirmButtonColor: '#ED1C24' });
+           }
+        }
+      })
+      .catch(error => {
+        console.error('Fetch Error:', error);
+        setLoading('txtSave', 'loadSave', 'btnSave', false);
+        Swal.fire({ icon: 'error', title: 'เชื่อมต่อล้มเหลว', text: 'ไม่สามารถติดต่อเซิร์ฟเวอร์ได้ กรุณาลองใหม่', confirmButtonColor: '#ED1C24' });
+      });
+    }
+
+    function resetForm() {
+      document.getElementById('empIdInput').value = '';
+      document.getElementById('phoneNumber').value = '';
+      document.getElementById('consentCheck').checked = false;
+      currentEmpId = '';
+      currentName = '';
+      
+      document.getElementById('step2').classList.remove('step-active');
+      document.getElementById('step1').classList.add('step-active');
+    }
+
+    function setLoading(txtId, loadId, btnId, state) {
+      if(state) {
+        document.getElementById(txtId).classList.add('d-none');
+        document.getElementById(loadId).classList.remove('d-none');
+        document.getElementById(btnId).disabled = true;
+      } else {
+        document.getElementById(txtId).classList.remove('d-none');
+        document.getElementById(loadId).classList.add('d-none');
+        document.getElementById(btnId).disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>
