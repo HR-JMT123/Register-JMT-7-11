@@ -97,6 +97,14 @@
       box-shadow: 0 8px 20px rgba(237, 28, 36, 0.4);
       color: white;
     }
+    
+    /* เพิ่มส่วนนี้ เพื่อทำให้สีปุ่มอ่อนลงเวลากดไม่ได้ */
+    .btn-main:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
 
     .consent-box {
       background-color: #fef0f2;
@@ -125,7 +133,7 @@
       <div class="logo-container">
         <img src="https://img5.pic.in.th/file/secure-sv1/imagebffae2f058c868f0.png" alt="JMT" class="logo-img">
         <i class="fa-solid fa-xmark cross-icon"></i>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/7-eleven_logo.svg/1024px-7-eleven_logo.svg.png" alt="7-Eleven" class="logo-img">
+        <img src="https://img5.pic.in.th/file/secure-sv1/image0d9668bdfff655f9.png" alt="7-Eleven" class="logo-img">
       </div>
       <h4 class="fw-bold mt-2" style="color: var(--primary-red);">ลงทะเบียนเพื่อรับสิทธิพิเศษจาก 7-Eleven Delivery</h4>
       <p class="text-muted small mb-0">สิทธิพิเศษสำหรับพนักงาน เจเอ็มที และบริษัทในเครือฯ</p>
@@ -152,7 +160,7 @@
 
         <div class="mb-4 text-start">
           <label class="form-label fw-bold"><i class="fa-solid fa-phone text-danger"></i> เบอร์โทร</label>
-          <input type="tel" id="phoneNumber" class="form-control" placeholder="08XXXXXXXX" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+          <input type="tel" id="phoneNumber" class="form-control" placeholder="08XXXXXXXX" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, ''); validateForm();">
           <div class="text-danger mt-3 text-center" style="font-size: 1rem; font-weight: 500;">
             * กรุณาระบุเบอร์ที่ผูกกับ All Member เพื่อรับสิทธิ
           </div>
@@ -160,14 +168,14 @@
 
         <div class="consent-box mb-4">
           <div class="form-check d-flex align-items-start m-0">
-            <input class="form-check-input flex-shrink-0 mt-1 me-3 shadow-sm custom-checkbox" type="checkbox" id="consentCheck">
+            <input class="form-check-input flex-shrink-0 mt-1 me-3 shadow-sm custom-checkbox" type="checkbox" id="consentCheck" onchange="validateForm()">
             <label class="form-check-label text-start" for="consentCheck" style="font-size: 0.95rem; line-height: 1.6; cursor: pointer; color: #111;">
               "ข้าพเจ้าขอยืนยันการรับสิทธิ์ พร้อมทั้งยินยอมให้บริษัทฯ ส่งต่อข้อมูลนี้ไปยังบริษัท CP ALL เพื่อรับสิทธิประโยชน์ที่พนักงานจะได้รับจากการซื้อสิ้นค้าในราคาพิเศษจาก 7-Eleven ผ่านช่องทาง Delivery"
             </label>
           </div>
         </div>
 
-        <button id="btnSave" class="btn btn-main w-100 btn-lg" onclick="submitData()">
+        <button id="btnSave" class="btn btn-main w-100 btn-lg" onclick="submitData()" disabled>
           <span id="txtSave"><i class="fa-solid fa-floppy-disk"></i> บันทึกข้อมูล</span>
           <span id="loadSave" class="spinner-border spinner-border-sm d-none" role="status"></span>
         </button>
@@ -189,6 +197,18 @@
 
     let currentEmpId = "";
     let currentName = "";
+
+    // ฟังก์ชันเพิ่มเติมสำหรับตรวจสอบการกรอกและติ๊ก
+    function validateForm() {
+      const phone = document.getElementById('phoneNumber').value;
+      const isAccepted = document.getElementById('consentCheck').checked;
+      
+      if(phone.length === 10 && isAccepted) {
+        document.getElementById('btnSave').disabled = false;
+      } else {
+        document.getElementById('btnSave').disabled = true;
+      }
+    }
 
     function searchData() {
       const empId = document.getElementById('empIdInput').value;
@@ -290,6 +310,9 @@
       currentEmpId = '';
       currentName = '';
       
+      // เพิ่ม: เมื่อรีเซ็ตฟอร์ม ให้กลับไปปิดปุ่ม(สีอ่อน) เหมือนเดิม
+      document.getElementById('btnSave').disabled = true;
+
       document.getElementById('step2').classList.remove('step-active');
       document.getElementById('step1').classList.add('step-active');
     }
@@ -303,12 +326,12 @@
         document.getElementById(txtId).classList.remove('d-none');
         document.getElementById(loadId).classList.add('d-none');
         document.getElementById(btnId).disabled = false;
+        
+        // เพิ่ม: เช็คว่าถ้าปุ่มถูกเปิดจากโหลด ให้เช็คสถานะฟอร์มอีกที
+        if(btnId === 'btnSave') validateForm();
       }
     }
   </script>
 </body>
 
 </html>
-
-
-
